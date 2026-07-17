@@ -1,3 +1,0 @@
-{"timestamp":"2026-07-17T13:42:26Z","tenant_id":"default","action":"SET","key":"bk-key","prev_hash":"","hash":"724cc8fad213cea58516b7b571e7752787ad2af56b9c2825004b82d5570fb344"}
-{"timestamp":"2026-07-17T13:42:26Z","tenant_id":"default","action":"ROTATE","key":"","prev_hash":"724cc8fad213cea58516b7b571e7752787ad2af56b9c2825004b82d5570fb344","hash":"a47dc92f182be651b3f511993bd1fbae3ceeade2972afeb8a0dec06d2765f607"}
-{"timestamp":"2026-07-17T13:42:26Z","tenant_id":"default","action":"GET","key":"bk-key","prev_hash":"a47dc92f182be651b3f511993bd1fbae3ceeade2972afeb8a0dec06d2765f607","hash":"f37a01d794ce32eb2d6e8c1b33d527a7ee8b3c6d334e5d03e556f75e3bd01dba"}
