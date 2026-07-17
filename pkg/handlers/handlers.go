@@ -3,7 +3,6 @@ package handlers
 import (
 	"encoding/hex"
 	"encoding/json"
-	"log"
 	"net"
 	"net/http"
 	"strings"
@@ -211,37 +210,4 @@ func HandleSecretRollback(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(`{"status":"rolled_back"}`))
 }
 
-// Leak Detection Middleware (SS.14)
-type responseWriterScanner struct {
-	http.ResponseWriter
-	tenantID string
-}
 
-func (w *responseWriterScanner) Write(b []byte) (int, error) {
-	keys, err := Store.List(w.tenantID)
-	if err == nil {
-		for _, k := range keys {
-			val, err := Store.Get(w.tenantID, k)
-			if err == nil && len(val) > 4 {
-				if strings.Contains(string(b), val) {
-					log.Printf("[WARNING] Secret Leak Alert: Outbound response leaks plaintext secret value for key %q!", k)
-				}
-			}
-		}
-	}
-	return w.ResponseWriter.Write(b)
-}
-
-func LeakDetectionMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tenantID := r.Header.Get("X-Tenant-ID")
-		if tenantID == "" {
-			tenantID = "default"
-		}
-		scanner := &responseWriterScanner{
-			ResponseWriter: w,
-			tenantID:       tenantID,
-		}
-		next.ServeHTTP(scanner, r)
-	})
-}
