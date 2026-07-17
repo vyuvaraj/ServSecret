@@ -1,0 +1,43 @@
+name: ServSecret CI
+
+on:
+  push:
+    branches: ["main", "feature/*"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  ci:
+    name: Build · Test · Vet
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout ServShared
+        uses: actions/checkout@v4
+        with:
+          repository: vyuvaraj/ServShared
+          path: ServShared
+
+      - name: Checkout ServSecret
+        uses: actions/checkout@v4
+        with:
+          path: ServSecret
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+          cache: true
+          cache-dependency-path: ServSecret/go.sum
+
+      - name: Build
+        working-directory: ServSecret
+        run: go build ./...
+
+      - name: Vet
+        working-directory: ServSecret
+        run: go vet ./...
+
+      - name: Test
+        working-directory: ServSecret
+        run: go test ./... -timeout 120s
